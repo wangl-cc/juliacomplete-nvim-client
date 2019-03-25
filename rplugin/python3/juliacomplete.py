@@ -42,7 +42,7 @@ class JuliaCompletePlugin(object):
         self.port = port
         currentbuf = self.nvim.eval('bufwinnr("%")')
         self.nvim.command(
-            'vsplit term://.//julia -L ~/.vim/julia/loadfile.jl')
+            'vsplit term://.//julia -L {}'.format(os.path.join(os.path.abspath(__file__), '../../../julia/loadfile.jl')))
         self.jlbufname = self.nvim.eval('bufname("%")')
         self.nvim.command("{} wincmd w".format(currentbuf))
         time.sleep(3)
