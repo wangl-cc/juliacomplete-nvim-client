@@ -16,7 +16,7 @@ A simple plug-in for nvim support [Julia](https://julialang.org/).
 ### 2. Install this plug-in.
 
 #### Installation with Vim-Plug
-```
+```vim-script
 Plug 'wangl-cc/juliacomplete-nvim-client', { 'do' : ':UpdateRemotePlugins' }
 ```
 
@@ -42,7 +42,7 @@ There is a function `comment#Comment(julia_comment_symbol)` being used to commen
 
 Here is an example of file `~/.vim/ftplugin/julia.vim`:
 
-```vimscript
+```vim-script
 if !exists("g:julia_comment_symbol")
     let julia_comment_symbol = '#'
 endif
