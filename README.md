@@ -28,7 +28,7 @@ Because the official [julia-vim](https://github.com/JuliaEditorSupport/julia-vim
 
 ### 2. Eval code
 
-There are two functions: `JLRunLine` and `JLRunBlock` being used to eval code in current line and current block. Map your own shortcut to use this feature.
+Like [Juno](http://junolab.org/) this plug-in can send code to term split (open default, if you exit, completion and eval code would be disable then you should `call Reconnect()`) and eval it then display its result (not inline but by echo). There are two functions: `JLRunLine` and `JLRunBlock` to eval code in current line and current block. Map your own shortcut to use this feature.
 
 ### 3. Docstring generation
 

@@ -40,11 +40,8 @@ class JuliaCompletePlugin(object):
         self.sock = sock
         self.host = host
         self.port = port
-        currentbuf = self.nvim.eval('bufwinnr("%")')
         self.nvim.command(
-            'vsplit term://.//julia -L {}'.format(os.path.join(os.path.abspath(__file__), '../../../julia/loadfile.jl')))
-        self.jlbufname = self.nvim.eval('bufname("%")')
-        self.nvim.command("{} wincmd w".format(currentbuf))
+            '10 split term://.//julia -L {}'.format(os.path.join(os.path.abspath(__file__), '../../../julia/loadfile.jl')))
         time.sleep(3)
         self.sock.connect((self.host, self.port))
 
@@ -59,7 +56,7 @@ class JuliaCompletePlugin(object):
         except:
             if self.nvim.eval('bufwinnr("{}")'.format(self.jlbufname)) == -1:
                 self.nvim.command(
-                    'vsplit term://.//julia -L ~/.vim/julia/loadfile.jl')
+                    '10 split term://.//julia -L {}'.format(os.path.join(os.path.abspath(__file__), '../../../julia/loadfile.jl')))
                 time.sleep(3)
             self.sock.connect((self.host, self.port))
 
