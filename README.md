@@ -11,11 +11,12 @@ A simple plug-in for nvim support [Julia](https://julialang.org/).
 
 ## Installation
 
-### 1. Install [wangl-cc/VimCompletion.jl](https://github.com/wangl-cc/VimCompletion.jl).
+### 1. Install [VimCompletion.jl](https://github.com/wangl-cc/VimCompletion.jl)
 
-### 2. Install this plug-in.
+### 2. Install this plug-in
 
-#### Installation with Vim-Plug
+#### Installation with [Vim-Plug](https://github.com/junegunn/vim-plug)
+
 ```vim-script
 Plug 'wangl-cc/juliacomplete-nvim-client', { 'do' : ':UpdateRemotePlugins' }
 ```
@@ -56,6 +57,6 @@ nnoremap <buffer> <leader>d :call juliadocstring#JuliaDocstring()<cr>
 " autoclose
 augroup JuliaAutoClose
     autocmd!
-    autocmd bufenter * if (winnr("$") == 1 && bufname("$") =~ "term://.//.*:julia -L .*")| q | endif
+    autocmd bufenter * if (winnr("$") == 1 && bufname("$") =~ "julia") | q | endif
 augroup END
 ```

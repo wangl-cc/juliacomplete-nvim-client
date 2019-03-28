@@ -58,8 +58,12 @@ class JuliaCompletePlugin(object):
         self.sock = sock
         self.host = host
         self.port = port
+        beginwindow = self.nvim.current.window
         self.nvim.command(
             '10 split term://.//julia -L {}'.format(os.path.join(os.path.abspath(__file__), '../../../julia/loadfile.jl')))
+        self.nvim.current.buffer.name = "julia"
+        self.jlbuffer = self.nvim.current.buffer
+        self.nvim.current.window = beginwindow
         time.sleep(3)
         self.sock.connect((self.host, self.port))
 
@@ -67,21 +71,23 @@ class JuliaCompletePlugin(object):
     def reconnect(self, args):
         try:
             # Just for test, it's junk message
-            msg = json.dumps(["-f", "using ", 6])
+            msg = json.dumps(["-e", "1"])
             msg = bytes(msg, "utf-8")
             self.sock.sendall(msg)
-            _ = self.sock.recv(64)
+            _ = json_recv(self.sock)
         except:
-            if self.nvim.eval('bufname("$") =~ "term://.//.*:julia -L .*")') == -1:
+            if not self.jlbuffer.valid:
                 self.nvim.command(
                     '10 split term://.//julia -L {}'.format(os.path.join(os.path.abspath(__file__), '../../../julia/loadfile.jl')))
+                self.nvim.current.buffer.name = "julia"
                 time.sleep(3)
             self.sock.connect((self.host, self.port))
 
     @pynvim.function('JLFindStart', sync=True)
     def findstart(self, args):
-        line = self.nvim.eval("getline('.')")
-        col = self.nvim.eval("col('.')")-1
+        line = self.nvim.current.line
+        _, col = self.nvim.current.window.cursor
+        col -= 1
         jlcompstart = findstart(line, col)
         self.nvim.command("let g:jlcompstart={}".format(jlcompstart))
 
@@ -96,7 +102,7 @@ class JuliaCompletePlugin(object):
 
     @pynvim.function('JLRunLine')
     def jlrunline(self, args):
-        line = self.nvim.eval("getline('.')")
+        line = self.nvim.current.line
         msg = json.dumps(["-e", line])
         msg = bytes(msg, "utf-8")
         self.sock.sendall(msg)
@@ -105,7 +111,7 @@ class JuliaCompletePlugin(object):
 
     @pynvim.function('JLRunBlock')
     def jlrunblock(self, args):
-        row = self.nvim.eval("line('.')")
+        row, _ = self.nvim.current.window.cursor
         beginrow = row
         endrow = row
         for i in range(row, 1, -1):
@@ -133,4 +139,5 @@ class JuliaCompletePlugin(object):
         self.close()
 
     def close(self):
+        self.nvim.close()
         self.sock.close()
