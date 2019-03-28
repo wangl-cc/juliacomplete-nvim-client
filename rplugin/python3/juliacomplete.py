@@ -5,6 +5,24 @@ import os
 import time
 
 
+def findstart(line, pos):
+    if pos == 1:
+        return 0
+    line = line[0:pos]
+    findusing = line.rfind("using ")
+    findimport = line.rfind("import ")
+    for i in range(pos-1, -1, -1):
+        if line[i] in (' ', '(', ')', '[', ']', '{', '}', '=', '!', '+', '-', '+', '*', '&', '#', '$', '%', '^', '<', '>', '?', ',', ':', ';'):
+            if line[i] == ' ':
+                if i == findusing+5:
+                    return findusing
+                elif i == findimport+6:
+                    return findimport
+                else:
+                    return i+1
+    return 0
+
+
 def json_recv(sock):
     start = sock.recv(1)
     if start == b'[':
@@ -29,7 +47,7 @@ def json_recv(sock):
 class JuliaCompletePlugin(object):
 
     def __init__(self, nvim):
-       self.nvim = nvim
+        self.nvim = nvim
 
     @pynvim.function('JLComInit', sync=False)
     def init_wrap(self, args):
@@ -52,9 +70,9 @@ class JuliaCompletePlugin(object):
             msg = json.dumps(["-f", "using ", 6])
             msg = bytes(msg, "utf-8")
             self.sock.sendall(msg)
-            _ = self.sock.recv(10).decode("utf-8")
+            _ = self.sock.recv(64)
         except:
-            if self.nvim.eval('bufwinnr("{}")'.format(self.jlbufname)) == -1:
+            if self.nvim.eval('bufname("$") =~ "term://.//.*:julia -L .*")') == -1:
                 self.nvim.command(
                     '10 split term://.//julia -L {}'.format(os.path.join(os.path.abspath(__file__), '../../../julia/loadfile.jl')))
                 time.sleep(3)
@@ -63,21 +81,18 @@ class JuliaCompletePlugin(object):
     @pynvim.function('JLFindStart', sync=True)
     def findstart(self, args):
         line = self.nvim.eval("getline('.')")
-        col = self.nvim.eval("col('.')")
-        msg = json.dumps(["-f", line, col-1])
-        msg = bytes(msg, "utf-8")
-        self.sock.sendall(msg)
-        recv = self.sock.recv(10).decode("utf-8")
-        self.nvim.command("let g:start={}".format(recv))
+        col = self.nvim.eval("col('.')")-1
+        jlcompstart = findstart(line, col)
+        self.nvim.command("let g:jlcompstart={}".format(jlcompstart))
 
     @pynvim.function('JLComGet', sync=True)
     def jlcompget(self, args):
-        base=args[0]
-        msg=json.dumps(["-c", base, len(base)])
-        msg=bytes(msg, "UTF-8")
+        base = args[0]
+        msg = json.dumps(["-c", base, len(base)])
+        msg = bytes(msg, "UTF-8")
         self.sock.sendall(msg)
-        recv=json_recv(self.sock).decode("utf-8")
-        self.nvim.command("let g:comp={}".format(recv))
+        recv = json_recv(self.sock).decode("utf-8")
+        self.nvim.command("let g:jlcomp={}".format(recv))
 
     @pynvim.function('JLRunLine')
     def jlrunline(self, args):
