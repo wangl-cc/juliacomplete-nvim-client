@@ -1,10 +1,10 @@
-# juliacomplete-nvim-client
+# juliatools-nvim
 
 A simple plug-in for nvim support [Julia](https://julialang.org/).
 
 ## Feature
 
-1. Julia REPLCompletion based completion.
+1. Julia REPLCompletion based completions.
 2. Eval code in current line or current block and get its result.
 3. Docstring generation. Support from [AtsushiSakai/julia.vim](https://github.com/AtsushiSakai/julia.vim)
 4. Quick comment.
@@ -18,7 +18,7 @@ A simple plug-in for nvim support [Julia](https://julialang.org/).
 #### Installation with [Vim-Plug](https://github.com/junegunn/vim-plug)
 
 ```vim-script
-Plug 'wangl-cc/juliacomplete-nvim-client', { 'do' : ':UpdateRemotePlugins' }
+Plug 'wangl-cc/juliatools-nvim', { 'do' : ':UpdateRemotePlugins' }
 ```
 
 ## Usage
