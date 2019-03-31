@@ -60,7 +60,7 @@ class JuliaCompletePlugin(object):
         self.port = port
         beginwindow = self.nvim.current.window
         self.nvim.command(
-            '10 split term://.//julia -L {}'.format(os.path.join(os.path.abspath(__file__), '../../../julia/loadfile.jl')))
+            '10 split term://.//julia --startup-file=no -L {}'.format(os.path.join(os.path.abspath(__file__), '../../../julia/loadfile.jl')))
         self.nvim.current.buffer.name = "julia"
         self.jlbuffer = self.nvim.current.buffer
         self.nvim.current.window = beginwindow
@@ -78,7 +78,7 @@ class JuliaCompletePlugin(object):
         except:
             if not self.jlbuffer.valid:
                 self.nvim.command(
-                    '10 split term://.//julia -L {}'.format(os.path.join(os.path.abspath(__file__), '../../../julia/loadfile.jl')))
+                    '10 split term://.//julia --startup-file=no -L {}'.format(os.path.join(os.path.abspath(__file__), '../../../julia/loadfile.jl')))
                 self.nvim.current.buffer.name = "julia"
                 time.sleep(3)
             self.sock.connect((self.host, self.port))
