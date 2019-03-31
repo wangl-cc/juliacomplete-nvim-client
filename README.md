@@ -9,11 +9,19 @@ A simple plug-in for nvim support [Julia](https://julialang.org/).
 3. Docstring generation. Support from [AtsushiSakai/julia.vim](https://github.com/AtsushiSakai/julia.vim)
 4. Quick comment.
 
+## Require
+
+* Julia 1.0+
+* Python3
+* Neovim
+
 ## Installation
 
 ### 1. Install [VimCompletion.jl](https://github.com/wangl-cc/VimCompletion.jl)
 
-### 2. Install this plug-in
+### 2. Install [pynvim](https://github.com/neovim/pynvim)
+
+### 3. Install this plug-in
 
 #### Installation with [Vim-Plug](https://github.com/junegunn/vim-plug)
 
@@ -39,9 +47,9 @@ There is a function `juliadocstring#JuliaDocstring` being used to generate docst
 
 There is a function `comment#Comment(julia_comment_symbol)` being used to comment and remove comment. Map your own shortcut as above.
 
-### Example
+### Example config
 
-Here is an example of file `~/.vim/ftplugin/julia.vim`:
+There are some configurations for using this plugin, which should be append to file `~/.vim/ftplugin/julia.vim` for vim or `~/.config/nvim/ftplugin/julia.vim` for nvim:
 
 ```vim-script
 if !exists("g:julia_comment_symbol")
