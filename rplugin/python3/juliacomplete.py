@@ -6,7 +6,7 @@ import time
 
 
 def findstart(line, pos):
-    if pos == 1:
+    if pos == 0:
         return 0
     line = line[0:pos]
     findusing = line.rfind("using ")
@@ -20,6 +20,8 @@ def findstart(line, pos):
                     return findimport
                 else:
                     return i+1
+            else:
+                return i+1
     return 0
 
 
